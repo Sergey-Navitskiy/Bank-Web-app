@@ -71,3 +71,34 @@ function displayMovements(movements){
   })
 }
 displayMovements(account1.movements)
+
+
+
+// const rub = [100, 222, 340, 456]
+// let usd = []
+
+// rub.forEach(function(val){
+//   usd.push(val / 72).toFixed(2)
+// })
+
+// const usd2 = rub.map((val) => (val / 72).toFixed(2))
+
+function createLogIn(accs){
+
+  accs.forEach(function(acc) {
+    acc.logIn = acc.owner.toLowerCase().split(' ').map(function(val){
+      return val[0]
+    }).join()
+})}
+
+
+createLogIn(accounts)
+
+
+const arr = [1, -12, 22, 27, -26, -100, 9]
+
+const filteredArr = arr.filter(function(val){
+  return val > 0
+})
+
+console.log(filteredArr)
