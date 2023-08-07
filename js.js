@@ -102,3 +102,19 @@ const filteredArr = arr.filter(function(val){
 })
 
 console.log(filteredArr)
+const array = [5, 5, 5, 5]
+
+const summ = array.reduce(function(acc, val, kay, arr){
+  return acc + val
+}, 0)
+
+
+function addingDigits(movements){
+  const ballence = movements.reduce(function(acc, val, key, arr){
+    return acc + val
+  }, 0 )
+  labelBalance.textContent = `${ballence}, RUB`
+}
+
+addingDigits(account1.movements)
+
