@@ -27,6 +27,7 @@ const account4 = {
 const accounts = [account1, account2, account3, account4];
 
 // Elements
+
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
 const labelBalance = document.querySelector(".balance__value");
@@ -62,7 +63,7 @@ function displayMovements(movements){
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">
-          ${i + 1} снятие
+          ${i + 1} ${type}
         </div>
         <div class="movements__date">24/01/2037</div>
         <div class="movements__value">${value}</div>
@@ -72,7 +73,7 @@ function displayMovements(movements){
 
   })
 }
-displayMovements(account1.movements)
+
 
 
 
@@ -86,43 +87,44 @@ displayMovements(account1.movements)
 // const usd2 = rub.map((val) => (val / 72).toFixed(2))
 
 
-
-
 // краткая запись пользователей для будущего логина(мейби)
 
-function createLogIn(accs){
-
-  accs.forEach(function(acc) {
-    acc.logIn = acc.owner.toLowerCase().split(' ').map(function(val){
-      return val[0]
-    }).join()
-})}
-
-createLogIn(accounts)
+function createLogIn(accs) {
+  accs.forEach(function (acc) {
+    acc.logIn = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map(function (val) {
+        return val[0];
+      })
+      .join("");
+  });
+}
+createLogIn(accounts);
 
 // тестировочная херня (никак не отображается на страничке)
 
-const arr = [1, -12, 22, 27, -26, -100, 9]
+// const arr = [1, -12, 22, 27, -26, -100, 9]
 
-const filteredArr = arr.filter(function(val){
-  return val > 0
-})
+// const filteredArr = arr.filter(function(val){
+//   return val > 0
+// })
 
-console.log(filteredArr)
-const array = [5, 5, 5, 5]
+// console.log(filteredArr)
+// const array = [5, 5, 5, 5]
 
-const summ = array.reduce(function(acc, val, kay, arr){
-  return acc + val
-}, 0)
+// const summ = array.reduce(function(acc, val, kay, arr){
+//   return acc + val
+// }, 0)
 
-const firstMinusNum = arr.find(function(val){
-  return num < 0
-})
+// const firstMinusNum = arr.find(function(val){
+//   return num < 0
+// })
 
-const acc = accounts.find(function(val){
-  return acc.owner === 'Anna Filimonova'
-})
-console.log(acc)
+// const acc = accounts.find(function(val){
+//   return acc.owner === 'Anna Filimonova'
+// })
+// console.log(acc)
 
 // Подсчёт и вывод деняк на места для общего баланса 
 
@@ -134,7 +136,7 @@ function addingDigits(movements){
   labelBalance.textContent = `${ballence}, RUB`
 }
 
-addingDigits(account1.movements)
+
 
 //Сумма, приход и уход деняк внизу странички 
 
@@ -156,4 +158,22 @@ function calcDisplaySum(movements){
   labelSumInterest.textContent = `${output + incomes}₽`
 }
 
-calcDisplaySum(account1.movements)
+
+
+let currentAccunt; 
+
+btnLogin.addEventListener('click', function(e) {
+  e.preventDefault()
+  currentAccunt = accounts.find(function(acc){
+    return acc.logIn === inputLoginUsername.value;
+  })
+  console.log(currentAccunt)
+  if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)){
+    containerApp.style.opacity = 100;
+    inputLoginPin.value = inputLoginUsername = ''
+    console.log('pin Ok')
+    displayMovements(currentAccunt.movements)
+    addingDigits(currentAccunt.movements)
+    calcDisplaySum(currentAccunt.movements)
+  }
+})
