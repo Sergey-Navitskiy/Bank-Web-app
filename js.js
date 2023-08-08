@@ -52,6 +52,8 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+//подсчёт бабосов на гл странице
+
 function displayMovements(movements){
   containerMovements.innerHTML = ''
   movements.forEach(function(value, i){
@@ -83,6 +85,11 @@ displayMovements(account1.movements)
 
 // const usd2 = rub.map((val) => (val / 72).toFixed(2))
 
+
+
+
+// краткая запись пользователей для будущего логина(мейби)
+
 function createLogIn(accs){
 
   accs.forEach(function(acc) {
@@ -91,9 +98,9 @@ function createLogIn(accs){
     }).join()
 })}
 
-
 createLogIn(accounts)
 
+// тестировочная херня (никак не отображается на страничке)
 
 const arr = [1, -12, 22, 27, -26, -100, 9]
 
@@ -108,6 +115,17 @@ const summ = array.reduce(function(acc, val, kay, arr){
   return acc + val
 }, 0)
 
+const firstMinusNum = arr.find(function(val){
+  return num < 0
+})
+
+const acc = accounts.find(function(val){
+  return acc.owner === 'Anna Filimonova'
+})
+console.log(acc)
+
+// Подсчёт и вывод деняк на места для общего баланса 
+
 
 function addingDigits(movements){
   const ballence = movements.reduce(function(acc, val, key, arr){
@@ -118,3 +136,24 @@ function addingDigits(movements){
 
 addingDigits(account1.movements)
 
+//Сумма, приход и уход деняк внизу странички 
+
+function calcDisplaySum(movements){
+  const incomes  = movements.filter(function(val){
+    return val > 0
+  }).reduce(function(acc,mov){
+    return acc + mov 
+  }, 0)
+  labelSumIn.textContent = `${incomes}₽`
+
+  const output = movements.filter(function(val){
+    return val < 0
+  }).reduce(function(acc, mov){
+    return acc + mov
+  }, 0)
+  labelSumOut.textContent = `${Math.abs(output)}₽`
+
+  labelSumInterest.textContent = `${output + incomes}₽`
+}
+
+calcDisplaySum(account1.movements)
