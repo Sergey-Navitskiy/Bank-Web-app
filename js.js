@@ -171,9 +171,17 @@ btnLogin.addEventListener('click', function(e) {
   if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)){
     containerApp.style.opacity = 100;
     inputLoginPin.value = inputLoginUsername = ''
-    console.log('pin Ok')
+    //console.log('pin Ok')
     displayMovements(currentAccunt.movements)
     addingDigits(currentAccunt.movements)
     calcDisplaySum(currentAccunt.movements)
   }
+})
+
+btnTransfer.addEventListener('click', function(e){
+  e.preventDefault()
+  const reciveAcc = accounts.find(function(acc){
+    return
+  })inputTransferTo.value
+  const amount = Number(inputTransferAmount.value)
 })
