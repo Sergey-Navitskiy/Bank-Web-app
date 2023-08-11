@@ -129,11 +129,13 @@ createLogIn(accounts);
 // Подсчёт и вывод деняк на места для общего баланса 
 
 
-function addingDigits(movements){
-  const ballence = movements.reduce(function(acc, val, key, arr){
+function addingDigits(acc){
+  const ballence = acc.movements.reduce(function(acc, val, key, arr){
     return acc + val
   }, 0 )
+  acc.ballence = ballence
   labelBalance.textContent = `${ballence}, RUB`
+  
 }
 
 
@@ -170,18 +172,39 @@ btnLogin.addEventListener('click', function(e) {
   console.log(currentAccunt)
   if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)){
     containerApp.style.opacity = 100;
-    inputLoginPin.value = inputLoginUsername = ''
+    inputLoginPin.value = inputLoginUsername.value = ''
     //console.log('pin Ok')
-    displayMovements(currentAccunt.movements)
-    addingDigits(currentAccunt.movements)
-    calcDisplaySum(currentAccunt.movements)
+    update(currentAccunt)
   }
 })
 
+function update(acc){
+  displayMovements(acc.movements)
+  addingDigits(acc)
+  calcDisplaySum(acc.movements)
+}
+// Перевод денег между аккаунтами 
 btnTransfer.addEventListener('click', function(e){
   e.preventDefault()
   const reciveAcc = accounts.find(function(acc){
-    return
-  })inputTransferTo.value
+    return acc.logIn === inputTransferTo.value
+  })
   const amount = Number(inputTransferAmount.value)
+  if(reciveAcc && amount > 0 && currentAccunt.ballence >= amount && reciveAcc.logIn !== currentAccunt.logIn){
+    currentAccunt.movements.push(-amount)
+    reciveAcc.movements.push(amount)
+    update(currentAccunt)
+    inputTransferTo.value = inputTransferAmount.value = ''
+  }
+})
+
+btnClose.addEventListener('click', function(e){
+  e.preventDefault()
+  if(inputCloseUsername.value === currentAccunt.logIn && Number(inputClosePin.value) === currentAccunt.pin) {
+    const index = accounts.findIndex(function(acc){
+      return acc.login === currentAccunt.logIn
+    })
+    accounts.splice(index, 1)
+    containerApp.style.opacity = 0
+  }
 })
