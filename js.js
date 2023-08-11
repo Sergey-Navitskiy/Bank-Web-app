@@ -207,4 +207,15 @@ btnClose.addEventListener('click', function(e){
     accounts.splice(index, 1)
     containerApp.style.opacity = 0
   }
+  inputCloseUsername.value = inputClosePin.value = ''
+})
+
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault()
+  const amount = Number(inputLoanAmount.value)
+  if(amount > 0){
+    currentAccunt.movements.push(amount)
+    update(currentAccunt)
+  }
+  inputLoanAmount.value = ''
 })
