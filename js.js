@@ -55,9 +55,12 @@ const inputClosePin = document.querySelector(".form__input--pin");
 
 //подсчёт бабосов на гл странице
 
-function displayMovements(movements){
+function displayMovements(movements, sort = false){
   containerMovements.innerHTML = ''
-  movements.forEach(function(value, i){
+
+  const movs = sort ? movements.slice().sort((a,b) => a - b) : movements
+
+  movs.forEach(function(value, i){
     const type = value > 0 ? 'deposit' : 'withdrawal'
 
     const html = `
@@ -218,4 +221,23 @@ btnLoan.addEventListener('click', function(e){
     update(currentAccunt)
   }
   inputLoanAmount.value = ''
+})
+
+
+const accMov = accounts.map(function(acc){
+  return acc.movements
+})
+
+const allMov = accMov.flat()
+
+const allBalance = allMov.reduce(function(acc, mov){
+  return acc + mov
+}, 0)
+
+
+let sorted   = false
+btnSort.addEventListener('click', function(e){
+  e.preventDefault()
+  displayMovements(currentAccunt.movements, !sorted)
+  sorted = !sorted
 })
