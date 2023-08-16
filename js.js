@@ -107,7 +107,7 @@ function displayMovements(acc, sort = false){
     const type = value > 0 ? 'deposit' : 'withdrawal'
     const date = new Date(acc.movementsDates[i])    
     const displayDate = formatMovementDate(date)
-
+    
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">
@@ -210,14 +210,19 @@ btnLogin.addEventListener('click', function(e) {
   if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)) {
     containerApp.style.opacity = 100;
     inputLoginPin.value = inputLoginUsername.value = ''
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = `${now.getMonth() + 1}`.padStart(2, 0)
-    const date = `${now.getDate()}`.padStart(2, 0)
-    const hours = `${now.getHours()}`.padStart(2, 0)
-    const minutes = `${now.getMinutes()}`.padStart(2, 0)
-    const seconds = `${now.getSeconds()}`.padStart(2, 0)
-    labelDate.textContent = `${date}/${month}/${year}/ ${hours}:${minutes}:${seconds}`
+    const local = navigator.language
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      weekday: 'short',
+      hours: 'numeric',
+      minutes: 'numeric',
+      seconds: 'numeric',
+      timeZoneName: 'long',
+      hour12: false
+    }
+    labelDate.textContent = Intl.DateTimeFormat(local, options).format(new Date())
     update(currentAccunt)
   }
 })
@@ -311,3 +316,7 @@ function formatMovementDate(date){
   const seconds = `${date.getSeconds()}`.padStart(2, 0)
   return `${day}/${month}/${year}/ ${hours}:${minutes}:${seconds}`
 }
+
+// опять всякая фигня
+// const now = new Date()
+// const gb = Intl.DateTimeFormat(local, options).format(now)
