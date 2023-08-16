@@ -210,6 +210,7 @@ btnLogin.addEventListener('click', function(e) {
   if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)) {
     containerApp.style.opacity = 100;
     inputLoginPin.value = inputLoginUsername.value = ''
+    
     const local = navigator.language
     const options = {
       year: 'numeric',
@@ -269,7 +270,7 @@ btnLoan.addEventListener('click', function(e) {
   const amount = Number(inputLoanAmount.value)
   if(amount > 0){
     currentAccunt.movements.push(amount)
-    currentAccunt.movementsDates.push(new Date().toISOString())
+    currentAccunt.movementsDates.push(new Date())
     update(currentAccunt)
   }
   inputLoanAmount.value = ''
@@ -302,7 +303,7 @@ function formatMovementDate(date){
   const calcDaysPassed = function(date1, date2) {
     return Math.round((date1 - date2) / (1000 * 60 * 24))
   }
-  daysPassed = calcDaysPassed(new Date(), date)
+  const daysPassed = calcDaysPassed(new Date(), date)
   if(daysPassed === 0) return 'Сегодня'
   if(daysPassed === 1) return 'Вчера'
   if(daysPassed >= 2 && daysPassed <= 4) return `Прошло ${daysPassed} дня`
@@ -320,11 +321,3 @@ function formatMovementDate(date){
 // опять всякая фигня
 // const now = new Date()
 // const gb = Intl.DateTimeFormat(local, options).format(now)
-
-const num = 12412513412
-const options = {
-  style: 'currency',
-  currency: 'RUB'
-
-}
-
