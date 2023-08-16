@@ -10,9 +10,9 @@ const account1 = {
     "2020-01-28T09:15:04.904Z",
     "2020-04-01T10:17:24.185Z",
     "2020-05-08T14:11:59.604Z",
-    "2020-05-27T17:01:17.194Z",
-    "2020-07-11T23:36:17.929Z",
-    "2020-07-12T10:51:36.790Z",
+    "2023-08-13T17:01:17.194Z",
+    "2023-08-14T23:36:17.929Z",
+    "2023-08-15T10:51:36.790Z",
   ],
   currency: "RUB",
   locale: "pt-PT",
@@ -98,26 +98,15 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-
-
-
 //подсчёт бабосов на гл странице
-
 function displayMovements(acc, sort = false){
   containerMovements.innerHTML = ''
-
   const movs = sort ? acc.movements.slice().sort((a,b) => a - b) : acc.movements
 
   movs.forEach(function(value, i){
     const type = value > 0 ? 'deposit' : 'withdrawal'
-    const date = new Date(acc.movementsDates[i])
-    const year = date.getFullYear()
-    const month = `${date.getMonth() + 1}`.padStart(2, 0)
-    const day = `${date.getDate()}`.padStart(2, 0)
-    const hours = `${date.getHours()}`.padStart(2, 0)
-    const minutes = `${date.getMinutes()}`.padStart(2, 0)
-    const seconds = `${date.getSeconds()}`.padStart(2, 0)
-    const displayDate = `${day}/${month}/${year}/ ${hours}:${minutes}:${seconds}`
+    const date = new Date(acc.movementsDates[i])    
+    const displayDate = formatMovementDate(date)
 
     const html = `
       <div class="movements__row">
@@ -171,47 +160,38 @@ createLogIn(accounts);
 
 // console.log(filteredArr)
 // const array = [5, 5, 5, 5]
-
 // const summ = array.reduce(function(acc, val, kay, arr){
 //   return acc + val
 // }, 0)
-
 // const firstMinusNum = arr.find(function(val){
 //   return num < 0
 // })
-
 // const acc = accounts.find(function(val){
 //   return acc.owner === 'Anna Filimonova'
 // })
 // console.log(acc)
 
-
 // Подсчёт и вывод деняк на места для общего баланса 
-
-function addingDigits(acc){
-  const ballence = acc.movements.reduce(function(acc, val, key, arr){
+function addingDigits(acc) {
+  const ballence = acc.movements.reduce(function(acc, val, key, arr) {
     return acc + val
   }, 0 )
   acc.ballence = ballence
   labelBalance.textContent = `${ballence}, RUB`
-  
 }
 
-
-
 //Сумма, приход и уход деняк внизу странички 
-
-function calcDisplaySum(movements){
-  const incomes  = movements.filter(function(val){
+function calcDisplaySum(movements) {
+  const incomes  = movements.filter(function(val) {
     return val > 0
-  }).reduce(function(acc,mov){
+  }).reduce(function(acc,mov) {
     return acc + mov 
   }, 0)
   labelSumIn.textContent = `${incomes}₽`
 
-  const output = movements.filter(function(val){
+  const output = movements.filter(function(val) {
     return val < 0
-  }).reduce(function(acc, mov){
+  }).reduce(function(acc, mov) {
     return acc + mov
   }, 0)
   labelSumOut.textContent = `${Math.abs(output)}₽`
@@ -219,17 +199,15 @@ function calcDisplaySum(movements){
   labelSumInterest.textContent = `${output + incomes}₽`
 }
 
-
 // логин в какаунт 
 let currentAccunt; 
-
 btnLogin.addEventListener('click', function(e) {
   e.preventDefault()
-  currentAccunt = accounts.find(function(acc){
+  currentAccunt = accounts.find(function(acc) {
     return acc.logIn === inputLoginUsername.value;
   })
   console.log(currentAccunt)
-  if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)){
+  if(currentAccunt && currentAccunt.pin === Number(inputLoginPin.value)) {
     containerApp.style.opacity = 100;
     inputLoginPin.value = inputLoginUsername.value = ''
     const now = new Date()
@@ -240,20 +218,21 @@ btnLogin.addEventListener('click', function(e) {
     const minutes = `${now.getMinutes()}`.padStart(2, 0)
     const seconds = `${now.getSeconds()}`.padStart(2, 0)
     labelDate.textContent = `${date}/${month}/${year}/ ${hours}:${minutes}:${seconds}`
-    //console.log('pin Ok')
     update(currentAccunt)
   }
 })
+
 // вызов функций в функции
 function update(acc){
   displayMovements(acc)
   addingDigits(acc)
   calcDisplaySum(acc.movements)
 }
+
 // Перевод денег между аккаунтами 
-btnTransfer.addEventListener('click', function(e){
+btnTransfer.addEventListener('click', function(e) {
   e.preventDefault()
-  const reciveAcc = accounts.find(function(acc){
+  const reciveAcc = accounts.find(function(acc) {
     return acc.logIn === inputTransferTo.value
   })
   const amount = Number(inputTransferAmount.value)
@@ -265,11 +244,12 @@ btnTransfer.addEventListener('click', function(e){
     inputTransferTo.value = inputTransferAmount.value = ''
   }
 })
+
 // закрытие аккаунта
-btnClose.addEventListener('click', function(e){
+btnClose.addEventListener('click', function(e) {
   e.preventDefault()
   if(inputCloseUsername.value === currentAccunt.logIn && Number(inputClosePin.value) === currentAccunt.pin) {
-    const index = accounts.findIndex(function(acc){
+    const index = accounts.findIndex(function(acc) {
       return acc.login === currentAccunt.logIn
     })
     accounts.splice(index, 1)
@@ -277,8 +257,9 @@ btnClose.addEventListener('click', function(e){
   }
   inputCloseUsername.value = inputClosePin.value = ''
 })
+
 // добавление средств на аккаунт 
-btnLoan.addEventListener('click', function(e){
+btnLoan.addEventListener('click', function(e) {
   e.preventDefault()
   const amount = Number(inputLoanAmount.value)
   if(amount > 0){
@@ -290,20 +271,43 @@ btnLoan.addEventListener('click', function(e){
 })
 
 // проверка связи(с космосом)
-const accMov = accounts.map(function(acc){
+const accMov = accounts.map(function(acc) {
   return acc.movements
 })
-
 const allMov = accMov.flat()
-
-const allBalance = allMov.reduce(function(acc, mov){
+const allBalance = allMov.reduce(function(acc, mov) {
   return acc + mov
 }, 0)
 
 // сортировка занесение на счёт и снятия
 let sorted   = false
-btnSort.addEventListener('click', function(e){
+btnSort.addEventListener('click', function(e) {
   e.preventDefault()
   displayMovements(currentAccunt, !sorted)
   sorted = !sorted
 })
+
+// очередные потуги выдать что-то 
+// const future = new Date(2025, 3, 15)
+// const now = new Date(2025, 2, 10)
+// const results = +future - +now
+// console.log(results)
+
+function formatMovementDate(date){
+  const calcDaysPassed = function(date1, date2) {
+    return Math.round((date1 - date2) / (1000 * 60 * 24))
+  }
+  daysPassed = calcDaysPassed(new Date(), date)
+  if(daysPassed === 0) return 'Сегодня'
+  if(daysPassed === 1) return 'Вчера'
+  if(daysPassed >= 2 && daysPassed <= 4) return `Прошло ${daysPassed} дня`
+  if(daysPassed === 7) return `Прошло ${daysPassed} дней`
+
+  const year = date.getFullYear()
+  const month = `${date.getMonth() + 1}`.padStart(2, 0)
+  const day = `${date.getDate()}`.padStart(2, 0)
+  const hours = `${date.getHours()}`.padStart(2, 0)
+  const minutes = `${date.getMinutes()}`.padStart(2, 0)
+  const seconds = `${date.getSeconds()}`.padStart(2, 0)
+  return `${day}/${month}/${year}/ ${hours}:${minutes}:${seconds}`
+}
