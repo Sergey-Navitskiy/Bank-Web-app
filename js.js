@@ -320,3 +320,11 @@ function formatMovementDate(date){
 // опять всякая фигня
 // const now = new Date()
 // const gb = Intl.DateTimeFormat(local, options).format(now)
+
+const num = 12412513412
+const options = {
+  style: 'currency',
+  currency: 'RUB'
+
+}
+
