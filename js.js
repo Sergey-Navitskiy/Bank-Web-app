@@ -12,7 +12,7 @@ const account1 = {
     "2020-05-08T14:11:59.604Z",
     "2023-08-13T17:01:17.194Z",
     "2023-08-14T23:36:17.929Z",
-    "2023-08-15T10:51:36.790Z",
+    "2023-07-17T10:51:36.790Z",
   ],
   currency: "RUB",
   locale: "pt-PT",
@@ -199,8 +199,28 @@ function calcDisplaySum(movements) {
   labelSumInterest.textContent = `${output + incomes}₽`
 }
 
+function startLogOut(){
+  let time = 600
+  function tic(){
+    const min = String(math.trunc(time / 60)).padStart(2, 0) 
+    const seconds = String(time % 60).padStart(2, 0) 
+    labelTimer.textContent = `${min}:${seconds}`
+    
+
+    if(time == 0) {
+      clearInterval(timer)
+      containerApp.style.opacity = 0
+    }
+    time-- 
+  }
+  tic()
+  const timer = setInterval(tic, 1000)
+}
+
+
 // логин в какаунт 
 let currentAccunt; 
+let timer
 btnLogin.addEventListener('click', function(e) {
   e.preventDefault()
   currentAccunt = accounts.find(function(acc) {
@@ -224,6 +244,10 @@ btnLogin.addEventListener('click', function(e) {
       hour12: false
     }
     labelDate.textContent = Intl.DateTimeFormat(local, options).format(new Date())
+    if(timer){
+      clearInterval(timer)
+    }
+    timer = startLogOut()
     update(currentAccunt)
   }
 })
@@ -245,7 +269,11 @@ btnTransfer.addEventListener('click', function(e) {
   if(reciveAcc && amount > 0 && currentAccunt.ballence >= amount && reciveAcc.logIn !== currentAccunt.logIn){
     currentAccunt.movements.push(-amount)
     reciveAcc.movements.push(amount)
+    //date
     currentAccunt.movementsDates.push(new Date().toISOString())
+    // сброс таймера 
+    clearInterval(timer)
+    timer = startLogOut()
     update(currentAccunt)
     inputTransferTo.value = inputTransferAmount.value = ''
   }
@@ -270,7 +298,11 @@ btnLoan.addEventListener('click', function(e) {
   const amount = Number(inputLoanAmount.value)
   if(amount > 0){
     currentAccunt.movements.push(amount)
+    // date
     currentAccunt.movementsDates.push(new Date())
+    // обновление таймера
+    clearInterval(timer)
+    timer = startLogOut()
     update(currentAccunt)
   }
   inputLoanAmount.value = ''
@@ -299,6 +331,7 @@ btnSort.addEventListener('click', function(e) {
 // const results = +future - +now
 // console.log(results)
 
+// магия с датами
 function formatMovementDate(date){
   const calcDaysPassed = function(date1, date2) {
     return Math.round((date1 - date2) / (1000 * 60 * 24))
