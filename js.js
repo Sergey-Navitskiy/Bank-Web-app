@@ -199,22 +199,24 @@ function calcDisplaySum(movements) {
   labelSumInterest.textContent = `${output + incomes}₽`
 }
 
-function startLogOut(){
-  let time = 600
-  function tic(){
-    const min = String(math.trunc(time / 60)).padStart(2, 0) 
-    const seconds = String(time % 60).padStart(2, 0) 
-    labelTimer.textContent = `${min}:${seconds}`
-    
+function startLogOut() {
+  let time = 600;
 
-    if(time == 0) {
+  function tick() {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const seconds = String(time % 60).padStart(2, 0);
+
+    labelTimer.textContent = `${min}:${seconds}`
+
+    if (time == 0) {
       clearInterval(timer)
       containerApp.style.opacity = 0
     }
-    time-- 
+    time--
   }
-  tic()
-  const timer = setInterval(tic, 1000)
+  tick()
+  const timer = setInterval(tick, 1000)
+  return timer
 }
 
 
@@ -272,9 +274,10 @@ btnTransfer.addEventListener('click', function(e) {
     //date
     currentAccunt.movementsDates.push(new Date().toISOString())
     // сброс таймера 
+    update(currentAccunt)
     clearInterval(timer)
     timer = startLogOut()
-    update(currentAccunt)
+    
     inputTransferTo.value = inputTransferAmount.value = ''
   }
 })
@@ -301,9 +304,9 @@ btnLoan.addEventListener('click', function(e) {
     // date
     currentAccunt.movementsDates.push(new Date())
     // обновление таймера
+    update(currentAccunt)
     clearInterval(timer)
     timer = startLogOut()
-    update(currentAccunt)
   }
   inputLoanAmount.value = ''
 })
